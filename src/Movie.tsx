@@ -1,11 +1,14 @@
 import * as React from 'react'
 
-interface Props {
-
-
+export interface movieItem {
+    id : number,
+    title : string,
+    poster : string,
+    genres : string[],
+    synopsis : string,
 }
 
-export const Movie : React.FC<Props> = (props) => {
+export const Movie : React.FC<movieItem> = (props) => {
     return (
         <div className="movie">
             <div className="movieTitle">
@@ -14,7 +17,7 @@ export const Movie : React.FC<Props> = (props) => {
             <div className="moviePoster">
                 moviePoster
             </div>
-            <div className="moviegenre">
+            <div className="movieGenre">
                 movieGenre
             </div>
             <div className="movieSynopsis">
