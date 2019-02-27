@@ -1,25 +1,35 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import * as React from 'react';
 import './App.css';
+import { Movie } from "./Movie";
 
-class App extends Component {
+interface Movie {
+  id : number,
+  title : string,
+  poster : string,
+  genre : string[],
+  synopsis : string,
+}
+
+interface State {
+  movies : Movie[],
+}
+
+class App extends React.Component<{}, State> {
+  componentDidMount(): void {
+    this._fetchMovies()
+  }
+
+  _fetchMovies = () => {
+    fetch("https://yts.am/api/v2/list_movies.json?sort_by=rating")
+        .then(res => res.json())
+        .then(json => console.log(json))
+  }
+
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Movie/>
       </div>
     );
   }
