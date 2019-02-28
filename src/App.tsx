@@ -5,31 +5,33 @@ import InfiniteScroll from 'react-infinite-scroller'
 
 interface State {
   movies : movieItem[],
+  page : number,
 }
-const INIT_STATE = {movies : []}
+const INIT_STATE = {movies : [], page : 1}
 
 class App extends React.Component<{}, State> {
 
   state = INIT_STATE
 
-  componentDidMount(): void {
-    this._setMovies()
-  }
-
   _setMovies = async () => {
-    const rawMovie = await this._fetchMovies()
+    console.log(`page : ${this.state.page}`)
+    const rawMovie = await this._fetchMovies(this.state.page)
+    console.log(rawMovie)
     const movies = rawMovie.map((rawMovie : any) => {
       const movie = { id :rawMovie.id, title : rawMovie.title, poster : rawMovie.large_cover_image, genres : rawMovie.genres, synopsis : rawMovie.synopsis }
       return movie
     })
 
-    this.setState({
-      movies
+    this.setState(prevState => {
+      return {
+        movies: prevState.movies.concat(movies),
+        page: prevState.page + 1,
+      }
     })
   }
 
-  _fetchMovies = () => {
-    return fetch("https://yts.am/api/v2/list_movies.json?sort_by=rating")
+  _fetchMovies = (page : number) => {
+    return fetch(`https://yts.am/api/v2/list_movies.json?sort_by=rating&limit=5&page=${page}`)
         .then(res => res.json())
         .then(json => json.data.movies)
         .catch(err => console.log(err))
@@ -52,18 +54,16 @@ class App extends React.Component<{}, State> {
   }
 
   render () {
-    const { movies } = this.state
     return (
       <div className="App">
-        {movies ? this._renderMovies() : "Loading"}
-        {/*<InfiniteScroll*/}
-            {/*pageStart={0}*/}
-            {/*loadMore={"D"}*/}
-            {/*hasMore={true || false}*/}
-            {/*loader={<div className="loader" key={0}>Loading ...</div>}*/}
-        {/*>*/}
-          {/*{null}*/}
-        {/*</InfiniteScroll>*/}
+        <InfiniteScroll
+            pageStart={0}
+            loadMore={this._setMovies}
+            hasMore={true}
+            loader={<div className="loader" key={0}>Loading ...</div>}
+        >
+          {this._renderMovies()}
+        </InfiniteScroll>
       </div>
     )
   }
