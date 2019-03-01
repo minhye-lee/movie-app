@@ -1,4 +1,6 @@
 import * as React from 'react'
+import Truncate from 'react-truncate';
+import './Movie.css'
 
 export interface movieItem {
     id : number,
@@ -16,9 +18,7 @@ export const Movie : React.FC<movieItem> = (props) => {
                 <MoviePoster title={title} poster={poster}/>
             </div>
             <div className="movieColumn">
-                <div className="movieTitle">
-                    <h1>{title}</h1>
-                </div>
+                <h1>{title}</h1>
                 <div className="movieGenres">
                     {genres.map((genre : string, index : number) => {
                         return (
@@ -27,7 +27,9 @@ export const Movie : React.FC<movieItem> = (props) => {
                     } )}
                 </div>
                 <div className="movieSynopsis">
-                    {synopsis}
+                    <Truncate lines={3} ellipsis={<span>...</span>} trimWhitespace>
+                        {synopsis}
+                    </Truncate>
                 </div>
             </div>
         </div>
@@ -37,7 +39,7 @@ export const Movie : React.FC<movieItem> = (props) => {
 const MoviePoster : React.FC<{title : string, poster : string}> = (props) => {
     const { title, poster } = props
     return (
-            <img src={poster} alt={title} title={title} />
+            <img className="moviePoster" src={poster} alt={title} title={title} />
     )
 }
 

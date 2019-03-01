@@ -31,7 +31,7 @@ class App extends React.Component<{}, State> {
   }
 
   _fetchMovies = (page : number) => {
-    return fetch(`https://yts.am/api/v2/list_movies.json?sort_by=rating&limit=5&page=${page}`)
+    return fetch(`https://yts.am/api/v2/list_movies.json?sort_by=rating&limit=10&page=${page}`)
         .then(res => res.json())
         .then(json => json.data.movies)
         .catch(err => console.log(err))
@@ -55,16 +55,15 @@ class App extends React.Component<{}, State> {
 
   render () {
     return (
-      <div className="App">
         <InfiniteScroll
+            className="App"
             pageStart={0}
             loadMore={this._setMovies}
             hasMore={true}
-            loader={<div className="loader" key={0}>Loading ...</div>}
+            loader={<div className="App--loading" key={0}>Loading ...</div>}
         >
           {this._renderMovies()}
         </InfiniteScroll>
-      </div>
     )
   }
 }
